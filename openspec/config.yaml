@@ -1,0 +1,51 @@
+# openspec/config.yaml — learning-log
+schema: spec-driven
+
+context: |
+  Tech stack: Angular 22, TypeScript 6.0, Tailwind CSS 4.1, PostCSS, Express 5 (SSR)
+  Architecture: Standalone Components, Signals-based reactivity, CSS 3D Tilt directives,
+    JSON block editor content model. Project name "Learning Loop".
+  Testing: Vitest 4.0.8 via @angular/build:unit-test, jsdom 28, strict_tdd: true.
+    No E2E tooling detected. No linting detected. Formatter: Prettier 3.8.
+  Style: Single quotes, 2-space indent, printWidth 100, Angular HTML parser.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+  design:
+    - Include sequence diagrams for complex flows
+    - Document architecture decisions with rationale
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+  apply:
+    guidelines:
+      - Follow existing code patterns
+      - Standalone components, Signals, native control flow
+    tdd: true
+    test_command: "pnpm test -- --run"
+  verify:
+    test_command: "pnpm test -- --run"
+    build_command: "pnpm build"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
+
+testing:
+  strict_tdd: true
+  runner: vitest
+  runner_command: "pnpm test -- --run"
+  layers:
+    unit: vitest
+    integration: vitest + jsdom
+    e2e: null
+  coverage:
+    available: true
+    command: "pnpm test -- --run --coverage"
+  quality:
+    linter: null
+    type_checker: "ng build"
+    formatter: "prettier --check"
