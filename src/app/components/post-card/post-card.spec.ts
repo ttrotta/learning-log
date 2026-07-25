@@ -12,6 +12,7 @@ describe('PostCard', () => {
     createdAt: new Date('2026-07-20'),
     tags: ['Angular', 'Testing'],
     coverColor: '#FF6B6B',
+    body: 'Test body content.',
   };
 
   async function setup(post: Post = mockPost) {

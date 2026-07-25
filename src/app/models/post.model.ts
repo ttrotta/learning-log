@@ -6,4 +6,5 @@ export interface Post {
   createdAt: Date;
   tags: string[];
   coverColor: string;
+  body: string;
 }
