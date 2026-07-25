@@ -1,1 +1,16 @@
-<p>Home works!</p>
+<section class="home">
+  <header class="home__header">
+    <h1 class="home__title">Learning Loop</h1>
+    <p class="home__subtitle">Thoughts on code, design, and building things.</p>
+  </header>
+
+  @if (posts().length === 0) {
+    <p class="home__empty">No posts yet. Check back soon!</p>
+  } @else {
+    <div class="home__grid">
+      @for (post of posts(); track post.id) {
+        <app-post-card [post]="post" />
+      }
+    </div>
+  }
+</section>
