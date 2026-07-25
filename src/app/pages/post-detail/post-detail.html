@@ -1,0 +1,29 @@
+@if (post(); as post) {
+  <div class="post-detail">
+    <div
+      class="post-detail__hero"
+      [style.background-color]="post.coverColor"
+    >
+      <div class="post-detail__hero-content">
+        <h1 class="post-detail__title">{{ post.title }}</h1>
+        <time class="post-detail__date">
+          {{ post.createdAt | date : 'mediumDate' }}
+        </time>
+        <div class="post-detail__tags">
+          @for (tag of post.tags; track tag) {
+            <span class="post-detail__tag">{{ tag }}</span>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="post-detail__body">
+      <p class="post-detail__body-text">{{ post.body }}</p>
+    </div>
+  </div>
+} @else {
+  <div class="post-detail__not-found">
+    <h2>Post not found</h2>
+    <p>The post you are looking for does not exist or has been removed.</p>
+  </div>
+}
