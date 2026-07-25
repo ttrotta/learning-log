@@ -21,6 +21,7 @@ The system MUST define a TypeScript `Post` interface in `src/app/models/post.mod
 | `createdAt` | `Date` | Publication date (proper `Date` object, not ISO string) |
 | `tags` | `string[]` | Categorization tags (at least 1, non-empty) |
 | `coverColor` | `string` | CSS-compatible color value (e.g., hex, rgb, hsl) |
+| `body` | `string` | Full article content in JSON block editor format |
 
 The interface MUST be exported as a named export. The model file MUST NOT contain any class, service, component, or logic — it is a pure type definition.
 
@@ -38,6 +39,12 @@ The interface MUST be exported as a named export. The model file MUST NOT contai
 - THEN it SHALL produce zero runtime JavaScript output (TypeScript interface-only file)
 - AND SHALL contain no class declarations, function bodies, or default values
 
+#### Scenario: body field compiles as required string
+
+- GIVEN the `Post` interface
+- WHEN creating a `Post` with a non-empty `body` string
+- THEN TypeScript accepts the object and `body` is required (not optional)
+
 ---
 
 ### Requirement: Post Service with Mock Data
@@ -49,8 +56,9 @@ The system MUST provide a `PostService` in `src/app/services/post.service.ts` th
 - The service MUST be decorated with `@Injectable({ providedIn: 'root' })`
 - The service MUST use the `inject()` DI function (NOT constructor DI) — if any dependencies are injected
 - The service MUST expose a public method or property that returns `Signal<Post[]>`
+- The service MUST expose a `getPostBySlug(slug: string): Post | undefined` method for single-post lookup by slug
 - The signal MUST contain at least 3 mock posts
-- Each mock post MUST have all `Post` fields populated with realistic, non-empty data
+- Each mock post MUST have all `Post` fields populated with realistic, non-empty data (including `body`)
 - The mock posts MUST each have a distinct `id`, `title`, `slug`, and `coverColor`
 - The `coverColor` values MUST be distinct across all mock posts (to enable the multicolor floating aesthetic)
 - The `createdAt` field MUST be a genuine `Date` object (not a string)
@@ -75,6 +83,18 @@ The system MUST provide a `PostService` in `src/app/services/post.service.ts` th
 - GIVEN the array of mock posts from `PostService`
 - WHEN the `coverColor` values are collected
 - THEN all values SHALL be distinct (no two posts share the same cover color)
+
+#### Scenario: getPostBySlug returns matching post with body
+
+- GIVEN a `PostService` instance
+- WHEN `getPostBySlug('getting-started-angular-signals')`
+- THEN a Post with matching slug SHALL return with non-empty `body`
+
+#### Scenario: getPostBySlug returns undefined for unknown slug
+
+- GIVEN a `PostService` instance
+- WHEN `getPostBySlug('non-existent-slug')`
+- THEN `undefined` SHALL be returned
 
 ---
 
@@ -214,10 +234,11 @@ The model file (`post.model.ts`) does not need a spec since it is a pure type de
 
 | Source file | Spec file | Minimum scenarios |
 |-------------|-----------|-------------------|
-| `src/app/services/post.service.ts` | `src/app/services/post.service.spec.ts` | 3 |
+| `src/app/services/post.service.ts` | `src/app/services/post.service.spec.ts` | 5 |
 | `src/app/components/post-card/post-card.ts` | `src/app/components/post-card/post-card.spec.ts` | 4 |
 | `src/app/directives/tilt.directive.ts` | `src/app/directives/tilt.directive.spec.ts` | 4 |
 | `src/app/pages/home/home.ts` | `src/app/pages/home/home.spec.ts` | 2 (updated) |
+| `src/app/pages/post-detail/post-detail.ts` | `src/app/pages/post-detail/post-detail.spec.ts` | 3 |
 
 #### Scenario: All specs pass with Vitest
 
@@ -242,9 +263,9 @@ All new files MUST follow the project's established directory conventions:
 ```
 src/app/
 ├── models/
-│   └── post.model.ts              (NEW — Post interface)
+│   └── post.model.ts              (NEW — Post interface; MODIFIED — added body field)
 ├── services/
-│   ├── post.service.ts            (NEW — PostService)
+│   ├── post.service.ts            (NEW — PostService with getPosts and getPostBySlug)
 │   └── post.service.spec.ts       (NEW — service tests)
 ├── components/
 │   └── post-card/
@@ -256,23 +277,21 @@ src/app/
 │   ├── tilt.directive.ts         (NEW — TiltDirective)
 │   └── tilt.directive.spec.ts    (NEW — TiltDirective tests)
 └── pages/
-    └── home/
-        ├── home.ts               (MODIFIED — wire PostService + PostCard)
-        ├── home.html             (MODIFIED — template with @for + PostCard)
-        ├── home.css              (MODIFIED — multicolor floating layout)
-        └── home.spec.ts          (MODIFIED — updated tests)
+    ├── home/
+    │   ├── home.ts               (MODIFIED — wire PostService + PostCard)
+    │   ├── home.html             (MODIFIED — template with @for + PostCard)
+    │   ├── home.css              (MODIFIED — multicolor floating layout)
+    │   └── home.spec.ts          (MODIFIED — updated tests)
+    └── post-detail/
+        ├── post-detail.ts         (NEW — standalone component with input.required('slug') + computed lookup)
+        ├── post-detail.html       (NEW — hero header + body + @if not-found)
+        ├── post-detail.css        (NEW — hero styling, readable body typography)
+        └── post-detail.spec.ts    (NEW — component and route navigation tests)
 ```
 
-#### Scenario: All new files exist and are non-empty
+#### Scenario: All new and modified files exist
 
 - GIVEN the `src/app/` directory tree
-- WHEN each file listed under NEW above is checked
-- THEN each file SHALL exist
-- AND each file SHALL contain non-whitespace content
-
-#### Scenario: Routes remain unchanged
-
-- GIVEN `src/app/app.routes.ts`
-- WHEN inspected after implementation
-- THEN the routes array SHALL still contain exactly one route: `{ path: '', loadComponent: () => import('./pages/home/home').then(m => m.Home) }`
-- AND no new routes SHALL be added (post detail routing is out of scope)
+- WHEN each file is checked
+- THEN NEW files SHALL exist with non-whitespace content
+- AND MODIFIED files SHALL contain additions
