@@ -1,0 +1,23 @@
+<article
+  appTilt
+  [routerLink]="['/post', post().slug]"
+  class="post-card"
+>
+  <div
+    data-testid="post-cover"
+    class="post-card__cover"
+    [style.background-color]="post().coverColor"
+  ></div>
+  <div class="post-card__body">
+    <h2 class="post-card__title">{{ post().title }}</h2>
+    <p class="post-card__excerpt">{{ post().excerpt }}</p>
+    <div class="post-card__meta">
+      <div class="post-card__tags">
+        @for (tag of post().tags; track tag) {
+          <span class="post-card__tag">{{ tag }}</span>
+        }
+      </div>
+      <time class="post-card__date">{{ post().createdAt | date:'mediumDate' }}</time>
+    </div>
+  </div>
+</article>
