@@ -27,6 +27,10 @@ describe('PostDetail', () => {
     expect(el.textContent).toContain('Why Signals?');
     expect(el.textContent).toContain('Automatic dependency tracking');
 
+    const body = el.querySelector('.post-detail__body');
+    expect(body).toBeTruthy();
+    expect(body!.querySelector('app-block-renderer')).toBeTruthy();
+
     const hero = el.querySelector('.post-detail__hero');
     expect(hero).toBeTruthy();
     expect((hero as HTMLElement).style.backgroundColor).toBe('rgb(255, 107, 107)');

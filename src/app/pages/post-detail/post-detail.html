@@ -18,7 +18,7 @@
     </div>
 
     <div class="post-detail__body">
-      <p class="post-detail__body-text">{{ post.body }}</p>
+      <app-block-renderer [blocks]="post.body" />
     </div>
   </div>
 } @else {

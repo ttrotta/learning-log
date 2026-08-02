@@ -1,0 +1,16 @@
+@for (block of blocks(); track $index) {
+  @switch (block.type) {
+    @case ('heading') {
+      <app-heading-renderer [block]="block" />
+    }
+    @case ('paragraph') {
+      <app-paragraph-renderer [block]="block" />
+    }
+    @case ('code') {
+      <app-code-renderer [block]="block" />
+    }
+    @case ('image') {
+      <app-image-renderer [block]="block" />
+    }
+  }
+}

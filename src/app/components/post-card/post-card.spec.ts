@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { PostCard } from './post-card';
 import { Post } from '../../models/post.model';
+import type { Block } from '../../blocks/types';
 
 describe('PostCard', () => {
   const mockPost: Post = {
@@ -12,7 +13,7 @@ describe('PostCard', () => {
     createdAt: new Date('2026-07-20'),
     tags: ['Angular', 'Testing'],
     coverColor: '#FF6B6B',
-    body: 'Test body content.',
+    body: [] as Block[],
   };
 
   async function setup(post: Post = mockPost) {
