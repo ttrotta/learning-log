@@ -21,9 +21,10 @@ The system MUST define a TypeScript `Post` interface in `src/app/models/post.mod
 | `createdAt` | `Date` | Publication date (proper `Date` object, not ISO string) |
 | `tags` | `string[]` | Categorization tags (at least 1, non-empty) |
 | `coverColor` | `string` | CSS-compatible color value (e.g., hex, rgb, hsl) |
-| `body` | `string` | Full article content in JSON block editor format |
+| `body` | `Block[]` | Structured content blocks (heading, paragraph, code, image) |
 
-The interface MUST be exported as a named export. The model file MUST NOT contain any class, service, component, or logic — it is a pure type definition.
+The interface MUST be exported as a named export. The model file MUST NOT contain any class, service, component, or logic — it is a pure type definition. The `Block` type MUST be imported from `src/app/blocks/types.ts`.
+(Previously: `body` was `string` — replaced with `Block[]` for structured block content)
 
 #### Scenario: Post interface is exported correctly
 
@@ -39,11 +40,12 @@ The interface MUST be exported as a named export. The model file MUST NOT contai
 - THEN it SHALL produce zero runtime JavaScript output (TypeScript interface-only file)
 - AND SHALL contain no class declarations, function bodies, or default values
 
-#### Scenario: body field compiles as required string
+#### Scenario: body field compiles as Block[] array
 
 - GIVEN the `Post` interface
-- WHEN creating a `Post` with a non-empty `body` string
+- WHEN creating a `Post` with a non-empty `body` array of valid `Block` objects
 - THEN TypeScript accepts the object and `body` is required (not optional)
+- AND assigning a `string` to `body` SHALL produce a compile-time type error
 
 ---
 
