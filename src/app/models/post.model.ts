@@ -1,3 +1,5 @@
+import type { Block } from '../blocks/types';
+
 export interface Post {
   id: string;
   title: string;
@@ -6,5 +8,5 @@ export interface Post {
   createdAt: Date;
   tags: string[];
   coverColor: string;
-  body: string;
+  body: Block[];
 }
