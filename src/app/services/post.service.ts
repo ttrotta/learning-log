@@ -15,6 +15,7 @@ export class PostService {
       createdAt: new Date('2026-07-20'),
       tags: ['Angular', 'Signals', 'State Management'],
       coverColor: '#FF6B6B',
+      theme: 'solaris',
       body: [
         { type: 'heading', level: 2, text: 'Why Signals?' },
         {
@@ -62,6 +63,7 @@ export class PostService {
       createdAt: new Date('2026-07-18'),
       tags: ['CSS', '3D', 'Animation'],
       coverColor: '#4ECDC4',
+      theme: 'abyss',
       body: [
         { type: 'heading', level: 2, text: 'The Power of Perspective' },
         {
@@ -98,6 +100,7 @@ export class PostService {
       createdAt: new Date('2026-07-15'),
       tags: ['Architecture', 'Editor', 'Content'],
       coverColor: '#45B7D1',
+      theme: 'neon',
       body: [
         { type: 'heading', level: 2, text: 'The Problem with Markdown' },
         {

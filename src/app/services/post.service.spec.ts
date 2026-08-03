@@ -25,14 +25,14 @@ describe('PostService', () => {
       expect(post.createdAt).toBeInstanceOf(Date);
       expect(post.tags.length).toBeGreaterThan(0);
       expect(post.coverColor).toBeTruthy();
+      expect(post.theme).toBeTruthy();
     });
   });
 
-  it('should have distinct coverColor values for each post', () => {
+  it('should give every seed a distinct curated theme', () => {
     const posts = service.getPosts();
-    const colors = posts.map((p: Post) => p.coverColor);
-    const uniqueColors = new Set(colors);
-    expect(uniqueColors.size).toBe(colors.length);
+    const themes = posts.map((p: Post) => p.theme);
+    expect(new Set(themes).size).toBe(themes.length);
   });
 
   it('should include body field on Post model', () => {
