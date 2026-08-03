@@ -146,4 +146,9 @@ export class PostService {
   getPostBySlug(slug: string): Post | undefined {
     return this.posts().find((post) => post.slug === slug);
   }
+  updatePost(slug: string, changes: Partial<Post>): void {
+    this.posts.update((current) =>
+      current.map((p) => (p.slug === slug ? { ...p, ...changes } : p)),
+    );
+  }
 }

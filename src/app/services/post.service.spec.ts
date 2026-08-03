@@ -52,4 +52,33 @@ describe('PostService', () => {
     const post = service.getPostBySlug('non-existent-slug');
     expect(post).toBeUndefined();
   });
+  describe('updatePost', () => {
+    it('should merge a partial theme change onto the matching post', () => {
+      service.updatePost('getting-started-angular-signals', { theme: 'neon' });
+
+      const post = service.getPostBySlug('getting-started-angular-signals');
+      expect(post!.theme).toBe('neon');
+      expect(post!.title).toBe('Getting Started with Angular Signals');
+      expect(post!.slug).toBe('getting-started-angular-signals');
+    });
+
+    it('should merge a partial title change and keep the rest', () => {
+      service.updatePost('building-custom-block-editor', { title: 'Updated Title' });
+
+      const post = service.getPostBySlug('building-custom-block-editor');
+      expect(post!.title).toBe('Updated Title');
+      expect(post!.theme).toBe('neon');
+      expect(post!.body.length).toBeGreaterThan(0);
+    });
+
+    it('should do nothing when updating a non-existent slug', () => {
+      const initialCount = service.getPosts().length;
+
+      service.updatePost('non-existent', { title: 'Nope' });
+
+      expect(service.getPosts().length).toBe(initialCount);
+      expect(service.getPostBySlug('non-existent')).toBeUndefined();
+    });
+  });
 });
+
