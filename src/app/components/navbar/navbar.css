@@ -1,0 +1,95 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.5rem;
+  background: rgba(247, 247, 248, 0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
+}
+
+.navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #111827;
+  text-decoration: none;
+}
+
+.navbar__brand-mark {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e76f51, #8b5cf6, #22d3ee);
+}
+
+.navbar__menu-toggle {
+  list-style: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #4b5563;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+}
+
+.navbar__menu-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.navbar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0 0;
+}
+
+.navbar__link {
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #4b5563;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar__link:hover {
+  background: rgba(17, 24, 39, 0.06);
+  color: #111827;
+}
+
+.navbar__link--active {
+  background: #111827;
+  color: #ffffff;
+}
+
+@media (min-width: 48rem) {
+  .navbar__menu-toggle {
+    display: none;
+  }
+
+  /* Desktop media query forces the disclosure open: the summary is hidden and
+     the details content is forced visible, so the nav stays a plain row. */
+  .navbar__menu::details-content {
+    content-visibility: visible;
+  }
+
+  .navbar__nav {
+    flex-direction: row;
+    padding: 0;
+  }
+}

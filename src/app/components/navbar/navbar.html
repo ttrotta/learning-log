@@ -1,0 +1,22 @@
+<header class="navbar">
+  <a routerLink="/" class="navbar__brand">
+    <span class="navbar__brand-mark" aria-hidden="true"></span>
+    <span class="navbar__brand-name">Learning Log</span>
+  </a>
+
+  <details class="navbar__menu">
+    <summary class="navbar__menu-toggle">Menu</summary>
+    <nav class="navbar__nav" aria-label="Primary">
+      <a
+        routerLink="/"
+        routerLinkActive="navbar__link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="navbar__link"
+        >Home</a
+      >
+      <a routerLink="/admin/new" routerLinkActive="navbar__link--active" class="navbar__link">
+        New Post
+      </a>
+    </nav>
+  </details>
+</header>
