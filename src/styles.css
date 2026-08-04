@@ -1,3 +1,183 @@
 @import 'highlight.js/styles/github-dark.css';
 
-/* Global styles - intentionally empty, component-scoped CSS handles the rest */
+/* ==========================================================================
+   Per-post theme catalog (global)
+   Each `.theme-<name>` container defines the `--post-*` roles consumed by
+   descendant renderer DOM via custom-property inheritance. Declared globally
+   so the 6-theme catalog stays out of any component stylesheet (4kB budget).
+   ========================================================================== */
+
+.theme-solaris {
+  --post-bg: #fce8dd;
+  --post-surface: #ffffff;
+  --post-ink: #4a2b2a;
+  --post-accent: #e76f51;
+  --post-font-display: 'Fraunces', Georgia, serif;
+  --post-font-body: 'Inter', system-ui, sans-serif;
+}
+
+.theme-abyss {
+  --post-bg: #10131f;
+  --post-surface: #1a1e2e;
+  --post-ink: #e7e9f5;
+  --post-accent: #8b5cf6;
+  --post-font-display: 'Fraunces', Georgia, serif;
+  --post-font-body: 'Inter', system-ui, sans-serif;
+}
+
+.theme-neon {
+  --post-bg: #0b0b14;
+  --post-surface: #16162a;
+  --post-ink: #e7f6f4;
+  --post-accent: #22d3ee;
+  --post-font-display: 'Fraunces', Georgia, serif;
+  --post-font-body: 'Inter', system-ui, sans-serif;
+}
+
+.theme-meadow {
+  --post-bg: #eaf4e4;
+  --post-surface: #fafbf8;
+  --post-ink: #2f3d2e;
+  --post-accent: #4c9a5a;
+  --post-font-display: 'Fraunces', Georgia, serif;
+  --post-font-body: 'Inter', system-ui, sans-serif;
+}
+
+.theme-candy {
+  --post-bg: #fdeff5;
+  --post-surface: #ffffff;
+  --post-ink: #552b42;
+  --post-accent: #ec6fb4;
+  --post-font-display: 'Fraunces', Georgia, serif;
+  --post-font-body: 'Inter', system-ui, sans-serif;
+}
+
+.theme-paper {
+  --post-bg: #f7f5f0;
+  --post-surface: #ffffff;
+  --post-ink: #3b3631;
+  --post-accent: #a9703f;
+  --post-font-display: 'Fraunces', Georgia, serif;
+  --post-font-body: 'Inter', system-ui, sans-serif;
+}
+
+/* ==========================================================================
+   Floating motion (CSS-only — no DOM mutation, SSR/hydration safe)
+   ========================================================================== */
+
+@keyframes blob-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(6vw, 4vh) scale(1.15);
+  }
+  100% {
+    transform: translate(-2vw, -3vh) scale(0.95);
+  }
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card,
+  [class*='blob'] {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Code-block theming
+   Specificity (0,3,1) beats the `.hljs` (0,1,0) import. The code island uses
+   --post-surface/--post-ink; light themes get a light token palette while the
+   dark themes (abyss, neon) keep the github-dark tokens.
+   ========================================================================== */
+
+.theme-solaris code.hljs,
+.theme-meadow code.hljs,
+.theme-candy code.hljs,
+.theme-paper code.hljs {
+  background: var(--post-surface);
+  color: var(--post-ink);
+}
+
+.theme-solaris code.hljs .hljs-keyword,
+.theme-solaris code.hljs .hljs-selector-tag,
+.theme-solaris code.hljs .hljs-literal,
+.theme-meadow code.hljs .hljs-keyword,
+.theme-meadow code.hljs .hljs-selector-tag,
+.theme-meadow code.hljs .hljs-literal,
+.theme-candy code.hljs .hljs-keyword,
+.theme-candy code.hljs .hljs-selector-tag,
+.theme-candy code.hljs .hljs-literal,
+.theme-paper code.hljs .hljs-keyword,
+.theme-paper code.hljs .hljs-selector-tag,
+.theme-paper code.hljs .hljs-literal {
+  color: #d73a49;
+}
+
+.theme-solaris code.hljs .hljs-string,
+.theme-solaris code.hljs .hljs-attribute,
+.theme-meadow code.hljs .hljs-string,
+.theme-meadow code.hljs .hljs-attribute,
+.theme-candy code.hljs .hljs-string,
+.theme-candy code.hljs .hljs-attribute,
+.theme-paper code.hljs .hljs-string,
+.theme-paper code.hljs .hljs-attribute {
+  color: #032f62;
+}
+
+.theme-solaris code.hljs .hljs-title,
+.theme-solaris code.hljs .hljs-title.function_,
+.theme-meadow code.hljs .hljs-title,
+.theme-meadow code.hljs .hljs-title.function_,
+.theme-candy code.hljs .hljs-title,
+.theme-candy code.hljs .hljs-title.function_,
+.theme-paper code.hljs .hljs-title,
+.theme-paper code.hljs .hljs-title.function_ {
+  color: #6f42c1;
+}
+
+.theme-solaris code.hljs .hljs-number,
+.theme-solaris code.hljs .hljs-symbol,
+.theme-meadow code.hljs .hljs-number,
+.theme-meadow code.hljs .hljs-symbol,
+.theme-candy code.hljs .hljs-number,
+.theme-candy code.hljs .hljs-symbol,
+.theme-paper code.hljs .hljs-number,
+.theme-paper code.hljs .hljs-symbol {
+  color: #005cc5;
+}
+
+.theme-solaris code.hljs .hljs-comment,
+.theme-solaris code.hljs .hljs-quote,
+.theme-meadow code.hljs .hljs-comment,
+.theme-meadow code.hljs .hljs-quote,
+.theme-candy code.hljs .hljs-comment,
+.theme-candy code.hljs .hljs-quote,
+.theme-paper code.hljs .hljs-comment,
+.theme-paper code.hljs .hljs-quote {
+  color: #6a737d;
+}
+
+.theme-abyss code.hljs,
+.theme-neon code.hljs {
+  background: var(--post-surface);
+  color: var(--post-ink);
+}
