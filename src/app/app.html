@@ -1,3 +1,15 @@
-<main>
-  <router-outlet></router-outlet>
-</main>
+<div class="app-shell">
+  <div class="app-shell__blobs" aria-hidden="true">
+    <span class="blob blob--coral"></span>
+    <span class="blob blob--indigo"></span>
+    <span class="blob blob--sky"></span>
+  </div>
+
+  <app-navbar />
+
+  <main class="app-shell__main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <app-footer />
+</div>

@@ -1,7 +1,68 @@
-main {
+:host {
+  /* Neutral shell tokens — scoped to the shell, NOT global theme roles. */
+  --shell-sky: #f7f7f8;
+  --shell-ink: #111827;
+  --shell-shadow: 0 16px 48px rgba(17, 24, 39, 0.08);
+
+  display: block;
+}
+
+.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background-color: #f9fafb;
-  color: #111827;
-  padding: 1.5rem;
-  font-size: 1.25rem;
+  background-color: var(--shell-sky);
+  color: var(--shell-ink);
+}
+
+.app-shell__blobs {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  animation: blob-drift 24s ease-in-out infinite alternate;
+}
+
+.blob--coral {
+  width: 34rem;
+  height: 34rem;
+  top: -12rem;
+  left: -8rem;
+  background: radial-gradient(circle at center, rgba(231, 111, 81, 0.55), transparent 70%);
+  animation-delay: -6s;
+}
+
+.blob--indigo {
+  width: 30rem;
+  height: 30rem;
+  top: -6rem;
+  right: -10rem;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.5), transparent 70%);
+  animation-delay: -14s;
+}
+
+.blob--sky {
+  width: 36rem;
+  height: 36rem;
+  bottom: -16rem;
+  left: 30%;
+  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.4), transparent 70%);
+  animation-delay: -22s;
+}
+
+.app-shell__main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
 }
