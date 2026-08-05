@@ -24,10 +24,25 @@ describe('Home', () => {
 
   it('should render PostCard for each post from service', async () => {
     const { fixture } = await setup();
-    const cards =
-      fixture.nativeElement.querySelectorAll('app-post-card');
+    const cards = fixture.nativeElement.querySelectorAll('app-post-card');
     const service = TestBed.inject(PostService);
     expect(cards.length).toBe(service.getPosts().length);
+  });
+
+  it('should render exactly one editorial h1, not the brand', async () => {
+    const { fixture } = await setup();
+    const h1s = fixture.nativeElement.querySelectorAll('h1');
+
+    expect(h1s.length).toBe(1);
+    const h1 = h1s[0] as HTMLElement;
+    expect(h1.textContent).toContain('floating log');
+    expect(h1.getAttribute('class')).toContain('home__title');
+  });
+
+  it('should retain the subtitle under the editorial heading', async () => {
+    const { fixture } = await setup();
+    const text = (fixture.nativeElement as HTMLElement).textContent;
+    expect(text).toContain('Thoughts on code, design, and building things.');
   });
 
   it('should show empty state when no posts', async () => {
