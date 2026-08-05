@@ -10,7 +10,30 @@ import { Component } from '@angular/core';
 class TestHostComponent {}
 
 describe('TiltDirective', () => {
-  async function setup() {
+  async function setup(reducedMotion = false) {
+    const mediaQueryList = {
+      matches: reducedMotion,
+      media: '(prefers-reduced-motion: reduce)',
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      onchange: null,
+      dispatchEvent: vi.fn(),
+    };
+
+    if (typeof window.matchMedia !== 'function') {
+      Object.defineProperty(window, 'matchMedia', {
+        writable: true,
+        configurable: true,
+        value: vi.fn().mockReturnValue(mediaQueryList as unknown as MediaQueryList),
+      });
+    } else {
+      vi.spyOn(window, 'matchMedia').mockReturnValue(
+        mediaQueryList as unknown as MediaQueryList,
+      );
+    }
+
     await TestBed.configureTestingModule({
       imports: [TestHostComponent],
     }).compileComponents();
@@ -59,6 +82,18 @@ describe('TiltDirective', () => {
 
     const leaveEvent = new MouseEvent('mouseleave');
     element.dispatchEvent(leaveEvent);
+    expect(element.style.transform).toBe('');
+  });
+
+  it('should NOT apply transform on mousemove when reduce motion is active', async () => {
+    const { element } = await setup(true);
+
+    const moveEvent = new MouseEvent('mousemove', {
+      clientX: 120,
+      clientY: 130,
+    });
+    element.dispatchEvent(moveEvent);
+
     expect(element.style.transform).toBe('');
   });
 });

@@ -9,9 +9,18 @@ export class TiltDirective implements OnDestroy {
   private readonly perspective = '600px';
   private readonly el = inject(ElementRef);
   private readonly renderer = inject(Renderer2);
-  private readonly unlisten: () => void;
+  private unlisten: (() => void) | undefined;
 
   constructor() {
+    const reduceMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
+      return;
+    }
+
     this.unlisten = this.renderer.listen(
       this.el.nativeElement,
       'mousemove',
@@ -52,6 +61,6 @@ export class TiltDirective implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.unlisten();
+    this.unlisten?.();
   }
 }

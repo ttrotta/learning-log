@@ -1,6 +1,8 @@
 .post-detail {
   max-width: 800px;
   margin: 0 auto;
+  font-family: var(--post-font-body);
+  color: var(--post-ink);
 }
 
 .post-detail__hero {
@@ -8,6 +10,7 @@
   border-radius: 12px;
   margin-bottom: 2rem;
   text-align: center;
+  background: var(--post-bg);
 }
 
 .post-detail__hero-content {
@@ -16,17 +19,18 @@
 }
 
 .post-detail__title {
+  font-family: var(--post-font-display);
   font-size: 2.25rem;
   font-weight: 800;
   letter-spacing: -0.03em;
   margin: 0 0 0.75rem;
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: var(--post-ink);
 }
 
 .post-detail__date {
   display: block;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--post-ink);
+  opacity: 0.8;
   font-size: 0.95rem;
   margin-bottom: 1.25rem;
 }
@@ -41,16 +45,17 @@
 .post-detail__tag {
   display: inline-block;
   padding: 0.3rem 0.75rem;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: var(--post-accent);
+  color: var(--post-surface);
   border-radius: 999px;
   font-size: 0.8rem;
   font-weight: 600;
-  backdrop-filter: blur(4px);
 }
 
 .post-detail__body {
   padding: 0 2rem 3rem;
+  background: var(--post-surface);
+  border-radius: 12px;
 }
 
 .post-detail__not-found {

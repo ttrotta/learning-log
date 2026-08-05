@@ -1,12 +1,11 @@
 <article
   appTilt
   [routerLink]="['/post', post().slug]"
-  class="post-card"
+  [class]="'post-card theme-' + resolveTheme(post().theme)"
 >
   <div
     data-testid="post-cover"
     class="post-card__cover"
-    [style.background-color]="post().coverColor"
   ></div>
   <div class="post-card__body">
     <h2 class="post-card__title">{{ post().title }}</h2>

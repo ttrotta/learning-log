@@ -1,9 +1,8 @@
 @if (post(); as post) {
-  <div class="post-detail">
-    <div
-      class="post-detail__hero"
-      [style.background-color]="post.coverColor"
-    >
+  <div
+    [class]="'post-detail theme-' + resolveTheme(post.theme)"
+  >
+    <div class="post-detail__hero">
       <div class="post-detail__hero-content">
         <h1 class="post-detail__title">{{ post.title }}</h1>
         <time class="post-detail__date">

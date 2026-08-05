@@ -17,7 +17,7 @@ describe('PostDetail', () => {
     return { fixture };
   }
 
-  it('should render hero with coverColor, title, date, tags, and body for valid slug', async () => {
+  it('should render themed hero, title, date, tags, and body for valid slug', async () => {
     const { fixture } = await setup('getting-started-angular-signals');
     const el: HTMLElement = fixture.nativeElement;
 
@@ -27,13 +27,17 @@ describe('PostDetail', () => {
     expect(el.textContent).toContain('Why Signals?');
     expect(el.textContent).toContain('Automatic dependency tracking');
 
+    const root = el.querySelector('.post-detail');
+    expect(root).toBeTruthy();
+    expect((root as HTMLElement).classList.contains('theme-solaris')).toBe(true);
+
     const body = el.querySelector('.post-detail__body');
     expect(body).toBeTruthy();
     expect(body!.querySelector('app-block-renderer')).toBeTruthy();
 
     const hero = el.querySelector('.post-detail__hero');
     expect(hero).toBeTruthy();
-    expect((hero as HTMLElement).style.backgroundColor).toBe('rgb(255, 107, 107)');
+    expect((hero as HTMLElement).style.backgroundColor).toBe('');
   });
 
   it('should show "Post not found" for invalid slug', async () => {
