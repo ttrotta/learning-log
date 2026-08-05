@@ -10,7 +10,6 @@ function makePost(theme: ThemeName): Post {
     excerpt: 'A placeholder-style test excerpt.',
     createdAt: new Date('2026-07-20'),
     tags: ['theme'],
-    coverColor: '#000000',
     theme,
     body: [{ type: 'paragraph', text: 'Hello.' }],
   };
@@ -28,8 +27,8 @@ describe('Post model', () => {
     expect(posts.map((post) => post.theme)).toEqual(themes);
   });
 
-  it('keeps coverColor alongside theme during the additive migration', () => {
+  it('no longer carries the removed coverColor field', () => {
     const post = makePost('paper');
-    expect(post.coverColor).toBe('#000000');
+    expect(Object.prototype.hasOwnProperty.call(post, 'coverColor')).toBe(false);
   });
 });

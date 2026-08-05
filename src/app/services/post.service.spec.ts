@@ -24,7 +24,6 @@ describe('PostService', () => {
       expect(post.excerpt).toBeTruthy();
       expect(post.createdAt).toBeInstanceOf(Date);
       expect(post.tags.length).toBeGreaterThan(0);
-      expect(post.coverColor).toBeTruthy();
       expect(post.theme).toBeTruthy();
     });
   });
@@ -52,6 +51,7 @@ describe('PostService', () => {
     const post = service.getPostBySlug('non-existent-slug');
     expect(post).toBeUndefined();
   });
+
   describe('updatePost', () => {
     it('should merge a partial theme change onto the matching post', () => {
       service.updatePost('getting-started-angular-signals', { theme: 'neon' });
@@ -81,4 +81,3 @@ describe('PostService', () => {
     });
   });
 });
-

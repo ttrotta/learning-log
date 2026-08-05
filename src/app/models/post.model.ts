@@ -8,7 +8,6 @@ export interface Post {
   excerpt: string;
   createdAt: Date;
   tags: string[];
-  coverColor: string;
-  theme?: ThemeName;
+  theme: ThemeName;
   body: Block[];
 }

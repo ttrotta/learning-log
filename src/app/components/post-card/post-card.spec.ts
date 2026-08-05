@@ -12,7 +12,6 @@ describe('PostCard', () => {
     excerpt: 'A test excerpt',
     createdAt: new Date('2026-07-20'),
     tags: ['Angular', 'Testing'],
-    coverColor: '#FF6B6B',
     theme: 'solaris',
     body: [] as Block[],
   };
