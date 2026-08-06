@@ -1,0 +1,181 @@
+.editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  min-height: calc(100vh - 4rem);
+  padding: 1.5rem;
+}
+
+.editor-not-found {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.editor-pane__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editor-pane__header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.editor-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-field label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-field input,
+.form-field textarea {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.form-field textarea {
+  min-height: 3rem;
+  resize: vertical;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-field {
+  flex: 1;
+}
+
+.form-field--small input {
+  max-width: 4rem;
+}
+
+.theme-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.theme-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.theme-tile:has(input:checked) {
+  border-color: #2563eb;
+}
+
+.theme-tile input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.theme-tile__swatch {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-tile[data-theme='solaris'] .theme-tile__swatch {
+  background: #e76f51;
+}
+
+.theme-tile[data-theme='abyss'] .theme-tile__swatch {
+  background: #8b5cf6;
+}
+
+.theme-tile[data-theme='neon'] .theme-tile__swatch {
+  background: #22d3ee;
+}
+
+.theme-tile[data-theme='meadow'] .theme-tile__swatch {
+  background: #4c9a5a;
+}
+
+.theme-tile[data-theme='candy'] .theme-tile__swatch {
+  background: #ec6fb4;
+}
+
+.theme-tile[data-theme='paper'] .theme-tile__swatch {
+  background: #a9703f;
+}
+
+.form-error {
+  color: #dc2626;
+  font-size: 0.75rem;
+  margin-top: 0.125rem;
+}
+
+.btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: #1d4ed8;
+}
+
+.editor-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 4rem;
+}
+
+.preview-pane {
+  border-left: 1px solid #e5e7eb;
+  padding-left: 1.5rem;
+}
+
+.preview-pane__title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

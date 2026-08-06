@@ -1,0 +1,94 @@
+<div class="editor-layout">
+  @if (postNotFound()) {
+    <div class="editor-not-found">
+      <h2>Post not found</h2>
+      <p>The post you are trying to edit does not exist.</p>
+    </div>
+  } @else {
+    <div class="editor-pane" data-testid="editor-form">
+      <div class="editor-pane__header">
+        <h1>{{ slug() ? 'Edit Post' : 'New Post' }}</h1>
+        <button class="btn btn--primary" (click)="save()">Save</button>
+      </div>
+
+      <!-- Metadata Form -->
+      <div class="editor-meta" [formGroup]="metadataForm">
+        <div class="form-field">
+          <label for="title">Title</label>
+          <input
+            id="title"
+            formControlName="title"
+            data-testid="editor-title"
+            (blur)="autoGenerateSlug()"
+          />
+        </div>
+        <div class="form-field">
+          <label for="slug">Slug</label>
+          <input id="slug" formControlName="slug" data-testid="editor-slug" />
+          @if (metadataForm.get('slug')?.errors?.['slugTaken']) {
+            <span class="form-error">Slug already taken</span>
+          }
+        </div>
+        <div class="form-field">
+          <label for="excerpt">Excerpt</label>
+          <textarea id="excerpt" formControlName="excerpt"></textarea>
+        </div>
+<div class="form-row">
+            <div class="form-field">
+              <label for="tags">Tags (comma separated)</label>
+              <input id="tags" formControlName="tags" />
+            </div>
+          </div>
+          <div
+            class="theme-gallery"
+            data-testid="theme-gallery"
+            role="radiogroup"
+            aria-label="Theme"
+          >
+            @for (theme of themes; track theme.name) {
+              <label
+                class="theme-tile"
+                data-testid="theme-tile"
+                [attr.data-theme]="theme.name"
+              >
+                <input
+                  type="radio"
+                  name="theme"
+                  [value]="theme.name"
+                  formControlName="theme"
+                />
+                <span class="theme-tile__swatch"></span>
+                <span class="theme-tile__name">{{ theme.label }}</span>
+              </label>
+            }
+          </div>
+      </div>
+
+      <!-- Toolbar -->
+      <app-toolbar (add)="addBlock($event)" />
+
+      <!-- Block List -->
+      <div
+        cdkDropList
+        class="editor-blocks"
+        data-testid="block-list"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (block of blockFormArray.controls; track block.get('id')?.value; let i = $index) {
+          <div cdkDrag data-testid="block-item">
+            <app-editor-block
+              [formGroup]="block"
+              (delete)="removeBlock(i)"
+            />
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Preview Panel -->
+    <div class="preview-pane" data-testid="preview-panel">
+      <h2 class="preview-pane__title">Preview</h2>
+      <app-block-renderer [blocks]="previewBlocks" />
+    </div>
+  }
+</div>
