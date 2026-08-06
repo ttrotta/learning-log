@@ -11,7 +11,7 @@ function makePost(theme: ThemeName): Post {
     createdAt: new Date('2026-07-20'),
     tags: ['theme'],
     theme,
-    body: [{ type: 'paragraph', text: 'Hello.' }],
+    body: [{ id: 'b-1', type: 'paragraph', text: 'Hello.' }],
   };
 }
 
