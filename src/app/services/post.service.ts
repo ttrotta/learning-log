@@ -16,38 +16,46 @@ export class PostService {
       tags: ['Angular', 'Signals', 'State Management'],
       theme: 'solaris',
       body: [
-        { type: 'heading', level: 2, text: 'Why Signals?' },
+        { id: 'b-001', type: 'heading', level: 2, text: 'Why Signals?' },
         {
+          id: 'b-002',
           type: 'paragraph',
           text: 'Angular Signals represent a fundamental shift in how we think about state management. Unlike traditional RxJS Observables which are pull-based and require subscriptions, Signals are push-based and automatically track dependencies.',
         },
         {
+          id: 'b-003',
           type: 'code',
           language: 'typescript',
           text: 'const count = signal(0);\nconst doubled = computed(() => count() * 2);',
         },
         {
+          id: 'b-004',
           type: 'paragraph',
           text: 'This means you no longer need to manually subscribe, unsubscribe, or manage async pipes. The framework handles all of that for you.',
         },
-        { type: 'heading', level: 2, text: 'Key Benefits' },
+        { id: 'b-005', type: 'heading', level: 2, text: 'Key Benefits' },
         {
+          id: 'b-006',
           type: 'paragraph',
           text: 'Automatic dependency tracking — computed signals know what they depend on',
         },
         {
+          id: 'b-007',
           type: 'paragraph',
           text: 'No memory leaks — no manual subscription management',
         },
         {
+          id: 'b-008',
           type: 'paragraph',
           text: 'Zoneless change detection — Signals can work without zone.js',
         },
         {
+          id: 'b-009',
           type: 'paragraph',
           text: 'Simpler mental model — no Observables terminology needed',
         },
         {
+          id: 'b-010',
           type: 'paragraph',
           text: 'The best part? Signals compose beautifully. You can build complex reactive chains that are still easy to reason about.',
         },
@@ -63,27 +71,32 @@ export class PostService {
       tags: ['CSS', '3D', 'Animation'],
       theme: 'abyss',
       body: [
-        { type: 'heading', level: 2, text: 'The Power of Perspective' },
+        { id: 'b-011', type: 'heading', level: 2, text: 'The Power of Perspective' },
         {
+          id: 'b-012',
           type: 'paragraph',
           text: 'The secret to convincing 3D on the web is understanding the `perspective` property. Think of it as the distance between the viewer and the scene — smaller values create more dramatic depth.',
         },
         {
+          id: 'b-013',
           type: 'code',
           language: 'css',
           text: '.card:hover {\n  transform: perspective(1000px) rotateX(5deg) rotateY(10deg);\n}',
         },
-        { type: 'heading', level: 2, text: 'Building a Tilt Effect' },
+        { id: 'b-014', type: 'heading', level: 2, text: 'Building a Tilt Effect' },
         {
+          id: 'b-015',
           type: 'paragraph',
           text: 'By combining `perspective`, `rotateX`, and `rotateY`, you can create a tilt effect that responds to mouse movement. This is exactly what we use in our PostCard component.',
         },
         {
+          id: 'b-016',
           type: 'code',
           language: 'typescript',
           text: "@HostListener('mousemove', ['$event'])\nonMouseMove(event: MouseEvent) {\n  const { left, top, width, height } =\n    this.element.getBoundingClientRect();\n  const x = (event.clientX - left) / width - 0.5;\n  const y = (event.clientY - top) / height - 0.5;\n  this.renderer.setStyle(\n    this.element,\n    'transform',\n    `perspective(1000px) rotateX(${y * -20}deg) rotateY(${x * 20}deg)`\n  );\n}",
         },
         {
+          id: 'b-017',
           type: 'paragraph',
           text: 'No libraries needed — just pure CSS and a dash of JavaScript.',
         },
@@ -99,38 +112,46 @@ export class PostService {
       tags: ['Architecture', 'Editor', 'Content'],
       theme: 'neon',
       body: [
-        { type: 'heading', level: 2, text: 'The Problem with Markdown' },
+        { id: 'b-018', type: 'heading', level: 2, text: 'The Problem with Markdown' },
         {
+          id: 'b-019',
           type: 'paragraph',
           text: 'Markdown is great for simple documents, but it falls apart when you need:',
         },
         {
+          id: 'b-020',
           type: 'paragraph',
           text: 'Embedded media with custom alignment',
         },
         {
+          id: 'b-021',
           type: 'paragraph',
           text: 'Interactive components within content',
         },
         {
+          id: 'b-022',
           type: 'paragraph',
           text: 'Per-block styling or metadata',
         },
         {
+          id: 'b-023',
           type: 'paragraph',
           text: 'Drag-and-drop reordering',
         },
-        { type: 'heading', level: 2, text: 'Enter JSON Blocks' },
+        { id: 'b-024', type: 'heading', level: 2, text: 'Enter JSON Blocks' },
         {
+          id: 'b-025',
           type: 'paragraph',
           text: 'Instead of a flat Markdown string, we store content as an array of block objects:',
         },
         {
+          id: 'b-026',
           type: 'code',
           language: 'json',
           text: '[\n  { "type": "heading", "level": 2, "text": "Why Blocks?" },\n  { "type": "paragraph", "text": "Each block is independent..." },\n  { "type": "code", "language": "typescript", "text": "..." },\n  { "type": "image", "src": "...", "alt": "..." }\n]',
         },
         {
+          id: 'b-027',
           type: 'paragraph',
           text: 'This approach gives us the flexibility of a structured content model with the simplicity of JSON. Every block is self-contained, independently styled, and easily reorderable.',
         },
@@ -143,9 +164,21 @@ export class PostService {
   getPostBySlug(slug: string): Post | undefined {
     return this.posts().find((post) => post.slug === slug);
   }
+
+  addPost(post: Post): void {
+    if (this.posts().some((p) => p.slug === post.slug)) {
+      throw new Error(`Slug "${post.slug}" is already taken`);
+    }
+    this.posts.update((current) => [...current, post]);
+  }
+
   updatePost(slug: string, changes: Partial<Post>): void {
     this.posts.update((current) =>
       current.map((p) => (p.slug === slug ? { ...p, ...changes } : p)),
     );
+  }
+
+  deletePost(slug: string): void {
+    this.posts.update((current) => current.filter((p) => p.slug !== slug));
   }
 }

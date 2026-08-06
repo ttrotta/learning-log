@@ -12,10 +12,10 @@ describe('BlockRendererComponent', () => {
 
   it('should render all four block types', () => {
     const blocks: Block[] = [
-      { type: 'heading', level: 2, text: 'Section' },
-      { type: 'paragraph', text: 'A paragraph.' },
-      { type: 'code', language: 'js', text: 'const a = 1;' },
-      { type: 'image', src: '/pic.jpg', alt: 'Pic' },
+      { id: 'b-h1', type: 'heading', level: 2, text: 'Section' },
+      { id: 'b-p1', type: 'paragraph', text: 'A paragraph.' },
+      { id: 'b-c1', type: 'code', language: 'js', text: 'const a = 1;' },
+      { id: 'b-i1', type: 'image', src: '/pic.jpg', alt: 'Pic' },
     ];
     const { fixture } = setup(blocks);
     const el: HTMLElement = fixture.nativeElement;
@@ -31,7 +31,7 @@ describe('BlockRendererComponent', () => {
   });
 
   it('should render nothing for unknown block type without errors', () => {
-    const blocks = [{ type: 'unknown' } as unknown as Block];
+    const blocks = [{ id: 'b-unknown', type: 'unknown' } as unknown as Block];
     const { fixture } = setup(blocks);
     const el: HTMLElement = fixture.nativeElement;
 

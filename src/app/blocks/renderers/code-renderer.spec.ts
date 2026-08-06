@@ -12,6 +12,7 @@ describe('CodeRendererComponent', () => {
 
   it('should render pre > code with language class', () => {
     const { fixture } = setup({
+      id: 'b-test-c1',
       type: 'code',
       language: 'typescript',
       text: 'const x = 1;',
@@ -26,6 +27,7 @@ describe('CodeRendererComponent', () => {
 
   it('should render css code with correct language class', () => {
     const { fixture } = setup({
+      id: 'b-test-c2',
       type: 'code',
       language: 'css',
       text: '.card { color: red; }',

@@ -1,4 +1,4 @@
-@for (block of blocks(); track $index) {
+@for (block of blocks(); track block.id) {
   @switch (block.type) {
     @case ('heading') {
       <app-heading-renderer [block]="block" />

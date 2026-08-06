@@ -12,6 +12,7 @@ describe('ImageRendererComponent', () => {
 
   it('should render img with src and alt', () => {
     const { fixture } = setup({
+      id: 'b-test-i1',
       type: 'image',
       src: '/photo.jpg',
       alt: 'A photo',
@@ -24,6 +25,7 @@ describe('ImageRendererComponent', () => {
 
   it('should render figcaption when caption is provided', () => {
     const { fixture } = setup({
+      id: 'b-test-i2',
       type: 'image',
       src: '/photo.jpg',
       alt: 'A photo',
@@ -38,6 +40,7 @@ describe('ImageRendererComponent', () => {
 
   it('should NOT render figcaption when caption is absent', () => {
     const { fixture } = setup({
+      id: 'b-test-i3',
       type: 'image',
       src: '/photo.jpg',
       alt: 'A photo',

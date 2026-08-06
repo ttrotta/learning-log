@@ -12,6 +12,7 @@ describe('ParagraphRendererComponent', () => {
 
   it('should render p tag with text', () => {
     const { fixture } = setup({
+      id: 'b-test-p1',
       type: 'paragraph',
       text: 'Hello world',
     });
@@ -22,6 +23,7 @@ describe('ParagraphRendererComponent', () => {
 
   it('should render a different paragraph text', () => {
     const { fixture } = setup({
+      id: 'b-test-p2',
       type: 'paragraph',
       text: 'Another paragraph with content',
     });
