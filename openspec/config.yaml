@@ -2,7 +2,7 @@
 schema: spec-driven
 
 context: |
-  Tech stack: Angular 22, TypeScript 6.0, Tailwind CSS 4.1, PostCSS, Express 5 (SSR)
+  Tech stack: Angular 22, TypeScript 6.0, Express 5 (SSR), pnpm. Scoped CSS only (no Tailwind, no PostCSS).
   Architecture: Standalone Components, Signals-based reactivity, CSS 3D Tilt directives,
     JSON block editor content model. Project name "Learning Loop".
   Testing: Vitest 4.0.8 via @angular/build:unit-test, jsdom 28, strict_tdd: true.
@@ -26,9 +26,9 @@ rules:
       - Follow existing code patterns
       - Standalone components, Signals, native control flow
     tdd: true
-    test_command: "pnpm test -- --run"
+    test_command: "pnpm ng test --watch=false"
   verify:
-    test_command: "pnpm test -- --run"
+    test_command: "pnpm ng test --watch=false"
     build_command: "pnpm build"
     coverage_threshold: 0
   archive:
@@ -37,7 +37,7 @@ rules:
 testing:
   strict_tdd: true
   runner: vitest
-  runner_command: "pnpm test -- --run"
+  runner_command: "pnpm ng test --watch=false"
   layers:
     unit: vitest
     integration: vitest + jsdom

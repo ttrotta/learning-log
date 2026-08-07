@@ -10,14 +10,14 @@ Define the structured block types, per-type renderer components, and dispatch co
 
 ### Requirement: Block Type Definition
 
-The system MUST define a `Block` discriminated union type and per-type interfaces in `src/app/blocks/types.ts`.
+The system MUST define a `Block` discriminated union type and per-type interfaces in `src/app/blocks/types.ts`. Every block interface SHALL include an `id: string` field for CDK drag-drop tracking.
 
 | Block Type | Discriminant `type` | Fields |
 |------------|---------------------|--------|
-| `HeadingBlock` | `heading` | `level: 1-6`, `text: string` |
-| `ParagraphBlock` | `paragraph` | `text: string` |
-| `CodeBlock` | `code` | `language: string`, `text: string` |
-| `ImageBlock` | `image` | `src: string`, `alt: string`, `caption?: string` (optional) |
+| `HeadingBlock` | `heading` | `id: string`, `level: 1-6`, `text: string` |
+| `ParagraphBlock` | `paragraph` | `id: string`, `text: string` |
+| `CodeBlock` | `code` | `id: string`, `language: string`, `text: string` |
+| `ImageBlock` | `image` | `id: string`, `src: string`, `alt: string`, `caption?: string` (optional) |
 
 The `Block` union SHALL be exported as `type Block = HeadingBlock | ParagraphBlock | CodeBlock | ImageBlock`.
 
@@ -26,7 +26,7 @@ The `Block` union SHALL be exported as `type Block = HeadingBlock | ParagraphBlo
 - GIVEN a variable typed as `Block`
 - WHEN assigned a value with `type: 'heading'`, `type: 'paragraph'`, `type: 'code'`, or `type: 'image'`
 - THEN TypeScript SHALL accept each assignment
-- AND SHALL require the respective fields for each type
+- AND SHALL require the respective fields for each type including `id`
 
 #### Scenario: Image caption is optional
 
@@ -40,6 +40,13 @@ The `Block` union SHALL be exported as `type Block = HeadingBlock | ParagraphBlo
 - GIVEN a `HeadingBlock`
 - WHEN `level` is assigned a value outside 1-6
 - THEN TypeScript SHALL raise a type error at compile time
+
+#### Scenario: Each block has a unique id
+
+- GIVEN a `Block[]` array initialized for editing
+- WHEN each block's `id` is inspected
+- THEN every `id` SHALL be a non-empty string
+- AND all `id` values in the array SHALL be unique
 
 ---
 
@@ -117,6 +124,12 @@ Every new unit MUST have a corresponding `.spec.ts` file with meaningful test co
 | `src/app/blocks/renderers/paragraph-renderer.ts` | `src/app/blocks/renderers/paragraph-renderer.spec.ts` | 1 |
 | `src/app/blocks/renderers/code-renderer.ts` | `src/app/blocks/renderers/code-renderer.spec.ts` | 1 |
 | `src/app/blocks/renderers/image-renderer.ts` | `src/app/blocks/renderers/image-renderer.spec.ts` | 2 |
+
+#### Scenario: id is required in all block types
+
+- GIVEN a `Block` variable assignment
+- WHEN `id` is omitted from any block constructor
+- THEN TypeScript SHALL raise a compile-time type error
 
 #### Scenario: All block renderer specs pass
 

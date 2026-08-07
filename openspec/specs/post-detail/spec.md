@@ -38,16 +38,27 @@ The system MUST provide a standalone `PostDetail` component at `src/app/pages/po
 - MUST read the slug param via `input.required<string>()` + `withComponentInputBinding()` or `ActivatedRoute`
 - MUST call `getPostBySlug(slug)` and store in a `Signal<Post | undefined>`
 - Template MUST use `@if` (not `*ngIf`)
-- Hero section: `coverColor` background div, `<h1>` title, formatted date, tag badges
-- Body section: MUST render `post.body` via `<app-block-renderer>` passing `[blocks]="post.body"` instead of raw text interpolation
-(Previously: body section rendered `post.body` as raw text content via `{{ post.body }}`)
+- Themed container: the hero and the reading body MUST live in a `.theme-<name>` container matching `post.theme`, consuming `--post-*` roles via `var()`
+- Hero section: themed background via `--post-bg`, title/date via `--post-ink`, tag badges via `--post-accent`; no hardcoded white text (fixes the white-on-light contrast flaw on light themes)
+- Body section: MUST render `post.body` via `<app-block-renderer>` passing `[blocks]="post.body"` instead of raw text interpolation, inside the themed reading body
 - No tilt directive on this page
 
-#### Scenario: PostDetail renders hero with post data
-- GIVEN a valid slug param
+(Previously: hero used `[style.background-color]="post.coverColor"` with hardcoded white text + text-shadow; body had no themed container; no theme class)
+
+#### Scenario: PostDetail renders themed hero with post data
+
+- GIVEN a valid slug param for a post with `theme === 'meadow'`
 - WHEN the component renders
-- THEN DOM SHALL contain: coverColor background, h1 title, formatted date, tag badges
-- AND SHALL contain an `<app-block-renderer>` element
+- THEN the DOM SHALL contain a hero with class `theme-meadow`
+- AND SHALL contain an h1 title, formatted date, and tag badges (accent-styled)
+- AND SHALL contain an `<app-block-renderer>` element for the themed body
+
+#### Scenario: PostDetail hero uses theme ink for legibility
+
+- GIVEN a rendered PostDetail for a post with a light theme
+- WHEN the hero's text color is inspected
+- THEN the title and date SHALL use `--post-ink` (not a hardcoded white)
+- AND SHALL remain legible against `--post-bg`
 
 #### Scenario: PostDetail uses signal with @if
 - GIVEN the component
