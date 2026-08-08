@@ -1,0 +1,310 @@
+# Delta for post-listing
+
+## MODIFIED Requirements
+
+### Requirement: Post Model Definition
+
+The system MUST define a TypeScript `Post` interface in `src/app/models/post.model.ts` with the following required fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `string` | Unique identifier for the post |
+| `title` | `string` | Post headline |
+| `slug` | `string` | URL-safe identifier derived from the title |
+| `excerpt` | `string` | Short summary or teaser text |
+| `createdAt` | `Date` | Publication date (proper `Date` object, not ISO string) |
+| `tags` | `string[]` | Categorization tags (at least 1, non-empty) |
+| `theme` | `ThemeName` | Curated theme identifier (Solaris, Abyss, Neon, Meadow, Candy, Paper) — the single visual color source |
+| `body` | `Block[]` | Structured content blocks (heading, paragraph, code, image) |
+
+The interface MUST be exported as a named export. The model file MUST NOT contain any class, service, component, or logic — it is a pure type definition. The `Block` type MUST be imported from `src/app/blocks/types.ts`. `ThemeName` MUST be the 6-value union exported from the theme catalog module. `coverColor` MUST be removed from the interface — `theme` is the sole color source.
+(Previously: field table had `coverColor: string` and no `theme`)
+
+#### Scenario: Post interface is exported correctly
+
+- GIVEN `src/app/models/post.model.ts`
+- WHEN the file is imported via `import { Post } from '../../models/post.model'`
+- THEN `Post` SHALL be a TypeScript interface with all required fields listed above
+- AND each field SHALL have the correct type
+
+#### Scenario: Post model is a pure type definition
+
+- GIVEN `src/app/models/post.model.ts`
+- WHEN the file is compiled with `tsc` (or Angular compiler)
+- THEN it SHALL produce zero runtime JavaScript output (TypeScript interface-only file)
+- AND SHALL contain no class declarations, function bodies, or default values
+
+#### Scenario: body field compiles as Block[] array
+
+- GIVEN the `Post` interface
+- WHEN creating a `Post` with a non-empty `body` array of valid `Block` objects
+- THEN TypeScript accepts the object and `body` is required (not optional)
+- AND assigning a `string` to `body` SHALL produce a compile-time type error
+
+#### Scenario: theme field accepts only ThemeName values
+
+- GIVEN the `Post` interface
+- WHEN `theme` is assigned a value outside the 6-name union, or `coverColor` is referenced
+- THEN TypeScript SHALL produce a compile-time type error
+
+---
+
+### Requirement: Post Service with Mock Data
+
+The system MUST provide a `PostService` in `src/app/services/post.service.ts` that provides mock post data via Angular's Signal API, and exposes CRUD methods for the post lifecycle.
+
+**Structure and contract:**
+
+- The service MUST be decorated with `@Injectable({ providedIn: 'root' })`
+- The service MUST use the `inject()` DI function (NOT constructor DI) — if any dependencies are injected
+- The service MUST expose a public method or property that returns `Signal<Post[]>`
+- The service MUST expose a `getPostBySlug(slug: string): Post | undefined` method for single-post lookup by slug
+- The service MUST expose `addPost(post: Post): void` — appends a new Post to the signal array
+- The service MUST expose `updatePost(slug: string, changes: Partial<Post>): void` — merges changes onto the matching post (partial merge, fixing the spec/code drift where the implementation replaced the whole post)
+- The service MUST expose `deletePost(slug: string): void` — removes the matching post from the signal array
+- The signal MUST contain at least 3 mock posts
+- Each mock post MUST have all `Post` fields populated with realistic, non-empty data (including `body` and a curated `theme`)
+- The mock posts MUST each have a distinct `id`, `title`, `slug`, and `theme`
+- The `theme` values MUST be distinct across all mock posts (rainbow grid: Solaris / Abyss / Neon)
+- The `createdAt` field MUST be a genuine `Date` object (not a string)
+
+(Previously: mocks required distinct `coverColor` values; `updatePost` was specified as partial merge but the implementation replaced the whole post)
+
+#### Scenario: PostService is injectable
+
+- GIVEN an Angular application configured with `@angular/core/testing` `TestBed`
+- WHEN `TestBed.inject(PostService)` is called
+- THEN a `PostService` instance SHALL be returned without errors
+
+#### Scenario: PostService returns Signal with mock data
+
+- GIVEN a `PostService` instance
+- WHEN `getPosts()` (or the equivalent signal accessor) is called
+- THEN the returned signal SHALL have a value
+- AND the value SHALL be an array of at least 3 `Post` objects
+- AND each post SHALL have all required fields populated with non-empty values
+- AND each post's `createdAt` SHALL be an instance of `Date`
+
+#### Scenario: Mock posts have distinct themes
+
+- GIVEN the array of mock posts from `PostService`
+- WHEN the `theme` values are collected
+- THEN all values SHALL be distinct curated themes (no two posts share the same theme)
+
+#### Scenario: Seed posts use curated themes
+
+- GIVEN the seed posts in `PostService`
+- WHEN each post's `theme` is inspected
+- THEN every value SHALL be one of the 6 curated `ThemeName` values (e.g., Solaris, Abyss, Neon)
+- AND no post SHALL reference `coverColor`
+
+#### Scenario: getPostBySlug returns matching post with body
+
+- GIVEN a `PostService` instance
+- WHEN `getPostBySlug('getting-started-angular-signals')`
+- THEN a Post with matching slug SHALL return with non-empty `body`
+
+#### Scenario: getPostBySlug returns undefined for unknown slug
+
+- GIVEN a `PostService` instance
+- WHEN `getPostBySlug('non-existent-slug')`
+- THEN `undefined` SHALL be returned
+
+#### Scenario: addPost appends to signal
+
+- GIVEN a `PostService` instance with 3 mock posts
+- WHEN `addPost(newPost)` is called with a valid Post
+- THEN the signal's value SHALL have 4 posts
+- AND the last element SHALL be `newPost`
+
+#### Scenario: updatePost merges changes
+
+- GIVEN a `PostService` instance with a post having slug `"hello"`
+- WHEN `updatePost("hello", { title: "Updated Title" })` is called
+- THEN the post matching slug `"hello"` SHALL have `title` equal to `"Updated Title"`
+- AND other fields of that post SHALL remain unchanged
+
+#### Scenario: updatePost merges a partial theme change
+
+- GIVEN a `PostService` instance with a post having slug `"hello"` and theme `"paper"`
+- WHEN `updatePost("hello", { theme: "neon" })` is called
+- THEN the post's `theme` SHALL equal `"neon"`
+- AND its remaining fields SHALL remain unchanged
+
+#### Scenario: updatePost does nothing on unknown slug
+
+- GIVEN a `PostService` instance
+- WHEN `updatePost("non-existent", { title: "Nope" })` is called
+- THEN the signal's value SHALL remain unchanged
+- AND no error SHALL be thrown
+
+#### Scenario: deletePost removes post by slug
+
+- GIVEN a `PostService` instance with 3 posts
+- WHEN `deletePost("hello")` is called for an existing slug
+- THEN the signal's value SHALL have 2 posts
+- AND none SHALL have slug `"hello"`
+
+#### Scenario: deletePost does nothing on unknown slug
+
+- GIVEN a `PostService` instance
+- WHEN `deletePost("non-existent")` is called
+- THEN the signal's value SHALL remain unchanged
+- AND no error SHALL be thrown
+
+---
+
+### Requirement: PostCard Component
+
+The system MUST provide a `PostCard` standalone component in `src/app/components/post-card/post-card.ts` that renders an individual post with the multicolor floating aesthetic.
+
+**Structure and contract:**
+
+- MUST be a standalone component (no `NgModule` dependency)
+- MUST have an `@Input({ required: true }) post: Post` property
+- MUST apply the `appTilt` directive to the root element for 3D hover effect
+- MUST apply the `.theme-<name>` class to the root element matching `post.theme`
+- The component template MUST render:
+  - A cover area themed with the post's `--post-accent` (via the theme class, not an inline `coverColor` binding)
+  - The `post.title` as a heading
+  - The `post.excerpt` as a paragraph
+  - Each `post.tag` rendered as a badge/chip element
+  - The `post.createdAt` formatted as a readable date (e.g., "Jul 24, 2026")
+- The card body MUST be tinted at rest by the post's theme via `--post-*` roles (rainbow grid), with a float loop applied to the card
+- The component root element MUST use `routerLink` to navigate to `/post/{post.slug}` on click
+
+(Previously: cover used an inline `post.coverColor` background; white card body regardless of hue; no theme class; no float loop)
+
+#### Scenario: PostCard renders all post fields
+
+- GIVEN a `PostCard` component with a `post` input set to a valid `Post` object
+- WHEN the component is rendered
+- THEN the DOM SHALL contain the post title as text content
+- AND SHALL contain the post excerpt as text content
+- AND SHALL contain each tag as distinct visible elements
+- AND SHALL contain a formatted date string (not the raw `Date` toString)
+
+#### Scenario: PostCard requires post input
+
+- GIVEN a `PostCard` component
+- WHEN it is instantiated without providing a `post` input
+- THEN Angular SHALL throw an error at runtime because `post` is `{ required: true }`
+
+#### Scenario: PostCard applies tilt directive
+
+- GIVEN a rendered `PostCard` with post data
+- WHEN the component root element is inspected
+- THEN it SHALL have the `appTilt` directive attribute present
+
+#### Scenario: PostCard applies the post theme class at rest
+
+- GIVEN a rendered `PostCard` with `post.theme === 'solaris'`
+- WHEN the component root element is inspected
+- THEN it SHALL have class `theme-solaris`
+- AND the cover SHALL NOT carry an inline `background-color` bound to `coverColor`
+
+#### Scenario: PostCard navigates on click
+
+- GIVEN a rendered `PostCard` with a valid post whose slug is `"my-first-post"`
+- WHEN the component root element is clicked
+- THEN the router SHALL navigate to `/post/my-first-post`
+
+---
+
+### Requirement: Tilt Directive
+
+The system MUST provide a `TiltDirective` in `src/app/directives/tilt.directive.ts` with selector `[appTilt]` that applies a CSS 3D perspective transform based on mouse position within the host element.
+
+**Structure and contract:**
+
+- MUST be a standalone directive with selector `[appTilt]`
+- MUST use `Renderer2` for DOM manipulation (NOT native DOM APIs like `element.style` or `el.style`)
+- MUST listen to `mousemove` event on the host element
+- SHALL calculate `rotateX` and `rotateY` values proportional to the mouse position relative to the element center
+- SHALL apply `transform: perspective(...) rotateX(...) rotateY(...)` to the host element
+- SHALL gracefully degrade: if no mouse events fire (e.g., touch device, programmatic render), no transform is applied and no errors are thrown
+- MUST check `prefers-reduced-motion` (e.g., via `matchMedia`) and, when reduce is active, MUST NOT apply a transform animation — tilt degrades to a simple hover response
+- MUST clean up event listeners on destroy (`ngOnDestroy` or equivalent)
+
+(Previously: no reduced-motion awareness)
+
+#### Scenario: Tilt directive applies transform on mousemove
+
+- GIVEN an element with the `appTilt` directive and motion allowed
+- WHEN a `mousemove` event is dispatched at coordinates `(x: 100, y: 100)` relative to the element
+- THEN the element's style SHALL have a `transform` property containing `perspective(`, `rotateX(`, and `rotateY(`
+- AND the values SHALL be non-zero and reflect the mouse position
+
+#### Scenario: Tilt directive gracefully degrades without mouse
+
+- GIVEN an element with the `appTilt` directive
+- WHEN no `mousemove` events fire on the element
+- THEN no `transform` style SHALL be applied to the element
+- AND no console errors or runtime exceptions SHALL occur
+
+#### Scenario: Tilt directive uses Renderer2
+
+- GIVEN the `TiltDirective` source code
+- WHEN the file is inspected
+- THEN all style/class/DOM mutations SHALL go through `Renderer2` methods (`setStyle`, `removeStyle`, `listen`, etc.)
+- AND SHALL NOT use `element.style`, `el.classList`, `document.querySelector`, or `nativeElement.style` directly
+
+#### Scenario: Tilt directive degrades under reduced motion
+
+- GIVEN an element with the `appTilt` directive
+- WHEN `matchMedia('(prefers-reduced-motion: reduce)')` matches and a `mousemove` event fires
+- THEN no transform animation SHALL be applied to the element
+- AND a simple hover response (without transform animation) SHALL be used instead
+
+#### Scenario: Tilt directive cleans up on destroy
+
+- GIVEN an element with the `appTilt` directive
+- WHEN the component hosting the directive is destroyed
+- THEN the `mousemove` event listener SHALL be removed
+- AND no transform style SHALL persist on the element
+
+---
+
+### Requirement: Home Page Integration
+
+The system MUST update the existing `Home` page component (`src/app/pages/home/home.ts`) to display the post listing.
+
+**Structure and contract:**
+
+- The `Home` component MUST import and inject `PostService` using `inject()`
+- The `Home` component MUST call the service to obtain a `Signal<Post[]>`
+- The template MUST iterate over the posts using `@for` and render a `PostCard` for each
+- The page MUST apply a multicolor floating layout (CSS grid or flexbox with visual spacing)
+- The grid MUST be the rainbow: every card tinted at rest by its post's theme
+- The page MUST render exactly one `h1` as an editorial page heading — the navbar owns the brand, so the home header MUST NOT duplicate it
+- The page MUST handle the empty state: if the posts array is empty, display a user-friendly message (e.g., "No posts yet") instead of an empty container
+
+(Previously: home header rendered the brand as an `h1`; no rainbow-at-rest contract)
+
+#### Scenario: Home page renders PostCard for each post
+
+- GIVEN the `Home` component with `PostService` returning 3 mock posts
+- WHEN the component is rendered
+- THEN exactly 3 `PostCard` elements SHALL appear in the DOM
+- AND each card SHALL display a unique title and carry its post's theme class
+
+#### Scenario: Home page shows empty state
+
+- GIVEN the `Home` component with `PostService` returning an empty array
+- WHEN the component is rendered
+- THEN no `PostCard` elements SHALL appear in the DOM
+- AND a text message indicating no posts SHALL be visible (e.g., "No posts yet")
+
+#### Scenario: Home page has a single editorial h1
+
+- GIVEN the rendered `Home` component
+- WHEN the page's `h1` elements are collected
+- THEN exactly one `h1` SHALL exist
+- AND it SHALL be the editorial heading, not the brand
+
+#### Scenario: Home page imports PostService via inject()
+
+- GIVEN the `Home` component source
+- WHEN the file is inspected
+- THEN the service SHALL be injected via `inject(PostService)` inside the component class body
+- AND SHALL NOT use constructor-based DI
