@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ThemeName, THEMES, resolveTheme } from './theme-catalog';
+import { THEMES, resolveTheme } from './theme-catalog';
 
 describe('theme-catalog', () => {
   describe('THEMES', () => {
