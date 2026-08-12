@@ -1,5 +1,30 @@
 @import 'highlight.js/styles/github-dark.css';
 
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #f7f7f8;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Keep the Home image continuous through the shell, including behind chrome. */
+.app-shell:has(.home) {
+  background-image:
+    linear-gradient(135deg, rgba(247, 247, 248, 0.24), rgba(255, 255, 255, 0.08)),
+    url('/assets/hero-background.png');
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 /* ==========================================================================
    Per-post theme catalog (global)
    Each `.theme-<name>` container defines the `--post-*` roles consumed by
