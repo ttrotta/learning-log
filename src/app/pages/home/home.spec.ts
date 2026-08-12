@@ -29,19 +29,37 @@ describe('Home', () => {
     expect(cards.length).toBe(service.getPosts().length);
   });
 
-  it('should render exactly one editorial h1, not the brand', async () => {
+  it('should render the post grid as an interactive layer', async () => {
+    const { fixture } = await setup();
+    const grid = fixture.nativeElement.querySelector('.home__grid');
+
+    expect(grid).toBeTruthy();
+    expect(grid.classList).toContain('home__grid');
+  });
+
+  it('should render the recent posts heading above the grid', async () => {
+    const { fixture } = await setup();
+    const heading = fixture.nativeElement.querySelector('.home__posts-heading');
+
+    expect(heading).toBeTruthy();
+    expect(heading.tagName).toBe('H2');
+    expect(heading.textContent).toContain('Posts Recientes');
+  });
+
+  it('should render exactly one branded editorial h1', async () => {
     const { fixture } = await setup();
     const h1s = fixture.nativeElement.querySelectorAll('h1');
 
     expect(h1s.length).toBe(1);
     const h1 = h1s[0] as HTMLElement;
-    expect(h1.textContent).toContain('floating log');
+    expect(h1.textContent).toContain('Learning Log');
     expect(h1.getAttribute('class')).toContain('home__title');
   });
 
-  it('should retain the subtitle under the editorial heading', async () => {
+  it('should retain the editorial eyebrow and subtitle', async () => {
     const { fixture } = await setup();
     const text = (fixture.nativeElement as HTMLElement).textContent;
+    expect(text).toContain('A floating log of things I\'m learning');
     expect(text).toContain('Thoughts on code, design, and building things.');
   });
 

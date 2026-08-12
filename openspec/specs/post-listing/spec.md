@@ -71,7 +71,7 @@ The system MUST provide a `PostService` in `src/app/services/post.service.ts` th
 - The signal MUST contain at least 3 mock posts
 - Each mock post MUST have all `Post` fields populated with realistic, non-empty data (including `body` and a curated `theme`)
 - The mock posts MUST each have a distinct `id`, `title`, `slug`, and `theme`
-- The `theme` values MUST be distinct across all mock posts (rainbow grid: Solaris / Abyss / Neon)
+- The `theme` values MUST be distinct across all mock posts (Solaris / Abyss / Neon)
 - The `createdAt` field MUST be a genuine `Date` object (not a string)
 
 (Previously: mocks required distinct `coverColor` values; `updatePost` was specified as partial merge but the implementation replaced the whole post)
@@ -162,7 +162,7 @@ The system MUST provide a `PostService` in `src/app/services/post.service.ts` th
 
 ### Requirement: PostCard Component
 
-The system MUST provide a `PostCard` standalone component in `src/app/components/post-card/post-card.ts` that renders an individual post with the multicolor floating aesthetic.
+The system MUST provide a `PostCard` standalone component in `src/app/components/post-card/post-card.ts` that renders an individual post as a white organic card with small theme-based accents.
 
 **Structure and contract:**
 
@@ -176,10 +176,11 @@ The system MUST provide a `PostCard` standalone component in `src/app/components
   - The `post.excerpt` as a paragraph
   - Each `post.tag` rendered as a badge/chip element
   - The `post.createdAt` formatted as a readable date (e.g., "Jul 24, 2026")
-- The card body MUST be tinted at rest by the post's theme via `--post-*` roles (rainbow grid), with a float loop applied to the card
+- The card MUST use a white surface with an organic asymmetric silhouette, while tags MAY use the post's theme accent
+- The card MAY use a subtle float loop at rest, provided it does not interfere with the pointer tilt interaction
 - The component root element MUST use `routerLink` to navigate to `/post/{post.slug}` on click
 
-(Previously: cover used an inline `post.coverColor` background; white card body regardless of hue; no theme class; no float loop)
+(Previously: cover used an inline `post.coverColor` background; card surfaces were theme-tinted)
 
 #### Scenario: PostCard renders all post fields
 
@@ -280,10 +281,12 @@ The system MUST update the existing `Home` page component (`src/app/pages/home/h
 - The `Home` component MUST import and inject `PostService` using `inject()`
 - The `Home` component MUST call the service to obtain a `Signal<Post[]>`
 - The template MUST iterate over the posts using `@for` and render a `PostCard` for each
-- The page MUST apply a multicolor floating layout (CSS grid or flexbox with visual spacing)
-- The grid MUST be the rainbow: every card tinted at rest by its post's theme
+- The page MUST apply a responsive editorial layout using CSS grid or flexbox with visual spacing
+- Post cards MUST use a white surface with an organic silhouette; post themes MAY remain as tag accents
 - The page MUST render exactly one `h1` as an editorial page heading — the navbar owns the brand, so the home header MUST NOT duplicate it
 - The page MUST handle the empty state: if the posts array is empty, display a user-friendly message (e.g., "No posts yet") instead of an empty container
+- When posts exist, the page MUST render a `Posts Recientes` heading immediately above the post grid.
+- On desktop, the three-card grid MUST use three symmetric columns in one row; the center card MAY have a subtle vertical offset to preserve visual asymmetry. On narrow viewports, the grid MUST collapse to one column and reset that offset.
 
 (Previously: home header rendered the brand as an `h1`; no rainbow-at-rest contract)
 
@@ -314,6 +317,22 @@ The system MUST update the existing `Home` page component (`src/app/pages/home/h
 - WHEN the file is inspected
 - THEN the service SHALL be injected via `inject(PostService)` inside the component class body
 - AND SHALL NOT use constructor-based DI
+
+#### Scenario: Home page labels the recent posts section
+
+- GIVEN the home page has posts
+- WHEN the page is rendered
+- THEN a `Posts Recientes` heading SHALL appear immediately above the post grid
+
+#### Scenario: Home page preserves balanced responsive composition
+
+- GIVEN the home page is rendered at desktop width
+- WHEN the grid is inspected
+- THEN it SHALL use three symmetric columns
+- AND all three cards SHALL occupy the same row
+- AND the center card MAY sit slightly lower than the outer cards
+- WHEN the page is rendered at narrow width
+- THEN the cards SHALL use one column and any desktop offset SHALL be reset
 
 ---
 
@@ -373,7 +392,7 @@ src/app/
     ├── home/
     │   ├── home.ts               (MODIFIED — wire PostService + PostCard)
     │   ├── home.html             (MODIFIED — template with @for + PostCard)
-    │   ├── home.css              (MODIFIED — multicolor floating layout)
+     │   ├── home.css              (MODIFIED — image-backed editorial layout)
     │   └── home.spec.ts          (MODIFIED — updated tests)
     └── post-detail/
         ├── post-detail.ts         (NEW — standalone component with input.required('slug') + computed lookup)

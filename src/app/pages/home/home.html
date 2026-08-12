@@ -1,16 +1,20 @@
 <section class="home">
-  <header class="home__header">
-    <h1 class="home__title">A floating log of things I'm learning</h1>
-    <p class="home__subtitle">Thoughts on code, design, and building things.</p>
-  </header>
+  <div class="home__scene">
+    <header class="home__header">
+      <p class="home__eyebrow">A floating log of things I'm learning</p>
+      <h1 class="home__title">Learning Log</h1>
+      <p class="home__subtitle">Thoughts on code, design, and building things.</p>
+    </header>
 
-  @if (posts().length === 0) {
-    <p class="home__empty">No posts yet. Check back soon!</p>
-  } @else {
-    <div class="home__grid">
-      @for (post of posts(); track post.id) {
-        <app-post-card [post]="post" />
-      }
-    </div>
-  }
+    @if (posts().length === 0) {
+      <p class="home__empty">No posts yet. Check back soon!</p>
+    } @else {
+      <h2 class="home__posts-heading">Posts Recientes</h2>
+      <div class="home__grid">
+        @for (post of posts(); track post.id) {
+          <app-post-card [post]="post" />
+        }
+      </div>
+    }
+  </div>
 </section>
