@@ -1,26 +1,55 @@
 .post-card {
   display: flex;
   flex-direction: column;
-  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 2.5rem 1rem 2.5rem 1rem;
   overflow: hidden;
-  background: var(--post-surface);
-  color: var(--post-ink);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow: 0 12px 34px rgba(21, 31, 18, 0.18);
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+  transition: transform 0.16s ease-out, box-shadow 0.3s ease;
   will-change: transform;
   animation: card-float 6s ease-in-out infinite;
 }
 
 .post-card:hover {
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
-  animation-play-state: paused;
+  box-shadow: 0 18px 48px rgba(21, 31, 18, 0.28);
+  /* card-float also writes `transform`; stop it so appTilt can own the tilt. */
+  animation: none;
+}
+
+.post-card:focus-visible {
+  outline: 3px solid #111827;
+  outline-offset: 5px;
 }
 
 .post-card__cover {
+  position: relative;
   height: 120px;
   flex-shrink: 0;
-  background: var(--post-accent);
+  background: #ffffff;
+  overflow: hidden;
+  transform: translate3d(calc(var(--tilt-x, 0) * 0.45px), calc(var(--tilt-y, 0) * 0.45px), 12px) scale(1.04);
+  transition: transform 0.16s ease-out;
+}
+
+.post-card__cover::after {
+  position: absolute;
+  inset: -25%;
+  content: '';
+  background: radial-gradient(circle at 30% 20%, rgba(17, 24, 39, 0.08), transparent 35%);
+  transform: translate3d(calc(var(--tilt-x, 0) * -0.7px), calc(var(--tilt-y, 0) * -0.7px), 0);
+  transition: transform 0.16s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card__cover,
+  .post-card__cover::after {
+    transform: none;
+    transition: none;
+  }
 }
 
 .post-card__body {
@@ -36,12 +65,12 @@
   font-weight: 700;
   line-height: 1.3;
   margin: 0;
-  color: var(--post-ink);
+  color: #1f2937;
 }
 
 .post-card__excerpt {
   font-family: var(--post-font-body);
-  color: var(--post-ink);
+  color: #4b5563;
   opacity: 0.75;
   font-size: 0.9375rem;
   line-height: 1.5;
@@ -73,12 +102,12 @@
   padding: 0.25rem 0.625rem;
   border-radius: 999px;
   background: var(--post-accent);
-  color: var(--post-surface);
+  color: #ffffff;
 }
 
 .post-card__date {
   font-size: 0.8125rem;
-  color: var(--post-ink);
+  color: #4b5563;
   opacity: 0.55;
   white-space: nowrap;
 }

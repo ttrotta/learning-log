@@ -63,11 +63,13 @@ describe('TiltDirective', () => {
     expect(transform).toContain('perspective(');
     expect(transform).toContain('rotateX(');
     expect(transform).toContain('rotateY(');
+    expect(element.style.getPropertyValue('--tilt-x')).not.toBe('');
   });
 
   it('should gracefully degrade without mouse events', async () => {
     const { element } = await setup();
     expect(element.style.transform).toBe('');
+    expect(element.style.getPropertyValue('--tilt-x')).toBe('');
   });
 
   it('should clean up transform on mouseleave', async () => {
@@ -93,6 +95,15 @@ describe('TiltDirective', () => {
       clientY: 130,
     });
     element.dispatchEvent(moveEvent);
+
+    expect(element.style.transform).toBe('');
+  });
+
+  it('should clean up all listeners when destroyed', async () => {
+    const { fixture, element } = await setup();
+    fixture.destroy();
+
+    element.dispatchEvent(new MouseEvent('mousemove', { clientX: 120, clientY: 130 }));
 
     expect(element.style.transform).toBe('');
   });

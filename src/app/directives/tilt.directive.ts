@@ -1,4 +1,11 @@
-import { Directive, ElementRef, OnDestroy, Renderer2, inject } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  OnDestroy,
+  Renderer2,
+  RendererStyleFlags2,
+  inject,
+} from '@angular/core';
 
 @Directive({
   selector: '[appTilt]',
@@ -9,7 +16,7 @@ export class TiltDirective implements OnDestroy {
   private readonly perspective = '600px';
   private readonly el = inject(ElementRef);
   private readonly renderer = inject(Renderer2);
-  private unlisten: (() => void) | undefined;
+  private readonly unlisten: Array<() => void> = [];
 
   constructor() {
     const reduceMotion =
@@ -21,14 +28,18 @@ export class TiltDirective implements OnDestroy {
       return;
     }
 
-    this.unlisten = this.renderer.listen(
-      this.el.nativeElement,
-      'mousemove',
-      (event: MouseEvent) => this.onMouseMove(event),
+    this.unlisten.push(
+      this.renderer.listen(
+        this.el.nativeElement,
+        'mousemove',
+        (event: MouseEvent) => this.onMouseMove(event),
+      ),
     );
 
-    this.renderer.listen(this.el.nativeElement, 'mouseleave', () =>
-      this.onMouseLeave(),
+    this.unlisten.push(
+      this.renderer.listen(this.el.nativeElement, 'mouseleave', () =>
+        this.onMouseLeave(),
+      ),
     );
   }
 
@@ -50,17 +61,25 @@ export class TiltDirective implements OnDestroy {
     );
     this.renderer.setStyle(
       this.el.nativeElement,
-      'transition',
-      'transform 0.1s ease-out',
+      '--tilt-x',
+      `${rotateY}`,
+      RendererStyleFlags2.DashCase,
+    );
+    this.renderer.setStyle(
+      this.el.nativeElement,
+      '--tilt-y',
+      `${rotateX}`,
+      RendererStyleFlags2.DashCase,
     );
   }
 
   private onMouseLeave(): void {
     this.renderer.removeStyle(this.el.nativeElement, 'transform');
-    this.renderer.removeStyle(this.el.nativeElement, 'transition');
+    this.renderer.removeStyle(this.el.nativeElement, '--tilt-x');
+    this.renderer.removeStyle(this.el.nativeElement, '--tilt-y');
   }
 
   ngOnDestroy(): void {
-    this.unlisten?.();
+    this.unlisten.forEach((unlisten) => unlisten());
   }
 }
