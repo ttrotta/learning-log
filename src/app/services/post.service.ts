@@ -1,8 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { Service, signal } from '@angular/core';
 import type { Post } from '../models/post.model';
 import { initialPosts } from './post.data';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class PostService {
   private readonly posts = signal<Post[]>(initialPosts);
 
